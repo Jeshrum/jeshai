@@ -1,7 +1,7 @@
 {
   "name": "jeshai",
   "version": "1.0.0",
-  "description": "A new project created with Intent by Augment.",
+  "description": "JESHAI: A local-first, multi-agent AI development workspace and orchestrator powered by Ollama.",
   "main": "dist/index.js",
   "scripts": {
     "start": "tsx src/index.ts",

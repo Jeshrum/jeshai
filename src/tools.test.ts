@@ -18,6 +18,9 @@ describe("Tools", () => {
       { toolCallId: "test", messages: [], abortSignal: undefined as any },
     );
     expect(result.success).toBe(true);
+    if (!result.success) {
+      throw new Error(`Expected read success, got: ${result.error}`);
+    }
     expect(result.content).toContain('"name"');
   });
 
@@ -27,6 +30,9 @@ describe("Tools", () => {
       { toolCallId: "test", messages: [], abortSignal: undefined as any },
     );
     expect(result.success).toBe(false);
+    if (result.success) {
+      throw new Error("Expected read failure for missing file.");
+    }
     expect(result.error).toBeDefined();
   });
 });

@@ -1,0 +1,63 @@
+{
+  "name": "autonomous-dev-loop",
+  "mode": "sequential-handoff",
+  "steps": [
+    {
+      "id": "goal-analysis",
+      "title": "Project goal analysis",
+      "agent": "product-manager",
+      "taskType": "planning",
+      "objective": "Clarify the goal, scope, constraints, acceptance criteria, and highest-risk unknowns.",
+      "handoff": "Pass a brief with scope, acceptance criteria, risks, and open assumptions in 5 bullets or fewer."
+    },
+    {
+      "id": "architecture-planning",
+      "title": "System architecture planning",
+      "agent": "architect",
+      "taskType": "reasoning",
+      "objective": "Turn the goal brief into a practical architecture, implementation shape, and interface plan.",
+      "handoff": "Pass component boundaries, data flow notes, file-level targets, and trade-offs in concise bullets."
+    },
+    {
+      "id": "task-breakdown",
+      "title": "Task breakdown",
+      "agent": "product-manager",
+      "taskType": "planning",
+      "objective": "Break the architecture into a low-risk execution order suitable for a small local model workflow.",
+      "handoff": "Pass a numbered implementation checklist with the minimum required sequence and success criteria."
+    },
+    {
+      "id": "implementation",
+      "title": "Code implementation",
+      "agent": "backend-engineer",
+      "taskType": "codeGeneration",
+      "objective": "Implement the next thin slice of work with minimal context and explicit file changes.",
+      "handoff": "Pass changed files, any unresolved issues, and the exact review focus for the auditor.",
+      "collaborators": ["frontend-engineer", "devops-engineer"]
+    },
+    {
+      "id": "code-review",
+      "title": "Code review",
+      "agent": "code-auditor",
+      "taskType": "reasoning",
+      "objective": "Review the implementation for correctness, edge cases, maintainability, and spec alignment.",
+      "handoff": "Pass defects, required fixes, and QA focus areas only."
+    },
+    {
+      "id": "qa-testing",
+      "title": "QA testing",
+      "agent": "qa-engineer",
+      "taskType": "editing",
+      "objective": "Verify expected behavior, test coverage, and regression risk with concise validation notes.",
+      "handoff": "Pass verified scenarios, failed scenarios, and doc updates needed by the documentation writer."
+    },
+    {
+      "id": "documentation",
+      "title": "Documentation generation",
+      "agent": "documentation-writer",
+      "taskType": "editing",
+      "objective": "Produce the final implementation summary, usage notes, and change log for the completed slice.",
+      "handoff": "Pass a short release-ready summary or next-step note."
+    }
+  ]
+}

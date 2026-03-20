@@ -13,23 +13,20 @@ async function main() {
     process.exit(1);
   }
 
-  if (!process.env.ANTHROPIC_API_KEY) {
-    console.error("❌  Missing ANTHROPIC_API_KEY — see .env.example");
-    process.exit(1);
-  }
-  if (!process.env.OPENROUTER_API_KEY) {
-    console.error("❌  Missing OPENROUTER_API_KEY — see .env.example");
-    process.exit(1);
-  }
-
-  console.log("🚀  Multi-agent orchestrator starting…");
+  console.log("🚀  Local multi-agent orchestrator starting…");
   console.log(`📝  Task: ${prompt}\n`);
 
-  const { plan, results } = await runCoordinator(prompt);
+  const { plan, results, selectedModel, workflowName } = await runCoordinator(prompt);
+
+  console.log(`\n🧠  Selected model: ${selectedModel}`);
+  console.log(`🪜  Workflow: ${workflowName}`);
 
   console.log("\n── Results ──────────────────────────────────");
-  results.forEach(({ task, output }, i) => {
-    console.log(`\n[${i + 1}] ${task}`);
+  results.forEach(({ title, agent, output, writtenFiles }, i) => {
+    console.log(`\n[${i + 1}] ${title} (${agent})`);
+    if (writtenFiles.length > 0) {
+      console.log(`Wrote: ${writtenFiles.join(", ")}`);
+    }
     console.log(output);
   });
 }

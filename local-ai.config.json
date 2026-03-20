@@ -1,0 +1,25 @@
+{
+  "provider": {
+    "name": "ollama",
+    "baseUrl": "http://localhost:11434"
+  },
+  "modelSelection": {
+    "preferred": [
+      "qwen2.5-coder:3b",
+      "deepseek-coder:1.3b",
+      "qwen2.5:3b"
+    ],
+    "defaultFor": {
+      "planning": "selectedLocalModel",
+      "reasoning": "selectedLocalModel",
+      "codeGeneration": "selectedLocalModel",
+      "editing": "selectedLocalModel"
+    }
+  },
+  "runtime": {
+    "contextBudgetChars": 6000,
+    "maxOutputTokens": 384,
+    "temperature": 0.2,
+    "sequentialHandoffs": true
+  }
+}

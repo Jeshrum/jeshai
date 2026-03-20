@@ -1,62 +1,67 @@
 /**
- * Coordinator agent — uses Claude to break tasks into subtasks and dispatch
- * them to specialist agents.
+ * Coordinator — runs a small-model-friendly workflow with sequential handoffs.
  */
-import { generateText } from "ai";
-import { coordinatorModel } from "../models.js";
-import { runSpecialist } from "./specialist.js";
+import { readFile } from "node:fs/promises";
+import { resolveLocalModelConfig } from "../models.js";
+import { runStepAgent, type StepResult, type WorkflowStep } from "./specialist.js";
 
-export interface CoordinatorResult {
-  plan: string[];
-  results: { task: string; output: string }[];
+interface WorkflowDefinition {
+  name: string;
+  mode: "sequential-handoff";
+  steps: WorkflowStep[];
 }
 
-/**
- * Run the coordinator: it plans the work, fans out to specialists, and
- * returns the aggregated results.
- */
+export interface CoordinatorResult {
+  selectedModel: string;
+  workflowName: string;
+  plan: string[];
+  results: StepResult[];
+}
+
+async function loadWorkflow(
+  workflowPath = process.env.WORKFLOW_PATH ?? "workflows/dev-loop.json",
+): Promise<WorkflowDefinition> {
+  const raw = await readFile(workflowPath, "utf-8");
+  return JSON.parse(raw) as WorkflowDefinition;
+}
+
 export async function runCoordinator(userPrompt: string): Promise<CoordinatorResult> {
-  // Step 1 — Ask Claude to decompose the task into specialist subtasks.
-  const planning = await generateText({
-    model: coordinatorModel,
-    system: `You are a coordinator agent. Given a user request, break it into
-a numbered list of independent specialist subtasks. Return ONLY a JSON array
-of strings, e.g. ["subtask 1", "subtask 2"]. No other text.`,
-    prompt: userPrompt,
-  });
+  const resolvedConfig = await resolveLocalModelConfig();
+  const workflow = await loadWorkflow();
+  const plan = workflow.steps.map((step) => `${step.title} → ${step.agent}`);
+  const results: StepResult[] = [];
 
-  let plan: string[];
-  try {
-    plan = JSON.parse(planning.text);
-  } catch {
-    // If the model didn't return clean JSON, wrap the whole response as one task.
-    plan = [planning.text.trim()];
-  }
-
-  console.log(`\n📋  Coordinator plan (${plan.length} subtasks):`);
+  console.log(`\n📋  Workflow: ${workflow.name} (${workflow.mode})`);
+  console.log(`🧠  Local model: ${resolvedConfig.selectedModel}`);
+  console.log(`🔗  Provider: ${resolvedConfig.provider.baseUrl}`);
+  console.log(`\n📋  Coordinator plan (${plan.length} steps):`);
   plan.forEach((t, i) => console.log(`   ${i + 1}. ${t}`));
 
-  // Step 2 — Fan out each subtask to a Qwen specialist (in parallel).
-  const settled = await Promise.allSettled(
-    plan.map((task) => runSpecialist(task)),
-  );
+  let previousResult: StepResult | undefined;
 
-  const results = settled.map((r, i) => ({
-    task: plan[i],
-    output: r.status === "fulfilled" ? r.value : `ERROR: ${(r as PromiseRejectedResult).reason}`,
-  }));
+  for (const step of workflow.steps) {
+    const result = await runStepAgent(
+      step,
+      {
+        goal: userPrompt,
+        workflowName: workflow.name,
+        contextBudgetChars: resolvedConfig.runtime.contextBudgetChars,
+        previousResult,
+      },
+      resolvedConfig,
+    );
 
-  // Step 3 — Let Claude synthesise a final answer from specialist outputs.
-  const synthesis = await generateText({
-    model: coordinatorModel,
-    system: `You are a coordinator agent. Synthesise the specialist outputs
-below into a clear, concise final answer for the user.`,
-    prompt: JSON.stringify(results, null, 2),
-  });
+    const writeSuffix = result.writtenFiles.length > 0 ? ` (${result.writtenFiles.length} file writes)` : "";
+    console.log(`   ✔ ${step.title} complete via ${step.agent}${writeSuffix}`);
+    results.push(result);
+    previousResult = result;
+  }
 
-  console.log("\n✅  Coordinator synthesis complete.\n");
-  console.log(synthesis.text);
-
-  return { plan, results };
+  return {
+    selectedModel: resolvedConfig.selectedModel,
+    workflowName: workflow.name,
+    plan,
+    results,
+  };
 }
 

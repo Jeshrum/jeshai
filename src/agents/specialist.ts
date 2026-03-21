@@ -7,6 +7,8 @@ import { join } from "node:path";
 import { applyFileWriteActions, parseFileWriteActions, taskTypeCanWrite } from "../file-actions.js";
 import type { ResolvedModelConfig, TaskType } from "../models.js";
 import { generateLocalText } from "../ollama.js";
+import { executeCommandTool } from "../tools.js";
+
 
 export interface WorkflowStep {
   id: string;
@@ -77,7 +79,17 @@ function buildStepPrompt(step: WorkflowStep, context: WorkflowRunContext): strin
       ].join("\n")
     : "Do not include a ## File Actions section for this step.";
 
+  const commandExecutionInstruction = (step.taskType === "codeGeneration" || step.taskType === "editing")
+    ? [
+        "If you need to run a terminal command (e.g. tests or builds), add this section:",
+        "## Terminal Actions",
+        "<<<EXECUTE:your command here>>>",
+        "Only run safe, non-destructive commands. No interactive prompts.",
+      ].join("\n")
+    : "Do not include a ## Terminal Actions section.";
+
   return [
+
     `Workflow: ${context.workflowName}`,
     `Goal: ${context.goal}`,
     `Current step: ${step.title}`,
@@ -92,11 +104,14 @@ function buildStepPrompt(step: WorkflowStep, context: WorkflowRunContext): strin
     "## Summary",
     "## Deliverable",
     "## File Actions (optional, only when you are writing files)",
+    "## Terminal Actions (optional, only for codeGeneration/editing)",
     "## Handoff",
     fileActionInstruction,
+    commandExecutionInstruction,
     "Keep the response focused, actionable, and short enough for a small local model workflow.",
   ].join("\n\n");
 }
+
 
 export async function runStepAgent(
   step: WorkflowStep,
@@ -119,7 +134,21 @@ export async function runStepAgent(
   const writeActions = taskTypeCanWrite(step.taskType) ? parseFileWriteActions(output) : [];
   const writtenFiles = writeActions.length > 0 ? await applyFileWriteActions(writeActions) : [];
 
+  // Parse and execute commands if present
+  const commandMatch = output.match(/<<<EXECUTE:([^>\n]+)>>>/);
+  if (commandMatch && commandExecutionInstruction.includes("EXECUTE")) {
+    const command = commandMatch[1].trim();
+    console.log(`💻  Executing: ${command}`);
+    const { stdout, stderr, success } = await executeCommandTool.execute({ command });
+    if (!success) {
+      console.error(`❌  Command failed: ${stderr}`);
+    } else if (stdout) {
+      console.log(`✅  Output: ${stdout.slice(0, 500).trim()}...`);
+    }
+  }
+
   return {
+
     stepId: step.id,
     title: step.title,
     agent: step.agent,

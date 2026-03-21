@@ -82,3 +82,38 @@ export const writeFileTool = {
   },
 };
 
+export interface ExecuteCommandInput {
+  command: string;
+}
+
+export interface ExecuteCommandOutput {
+  success: boolean;
+  stdout: string;
+  stderr: string;
+}
+
+/** Execute a command in the terminal */
+export const executeCommandTool = {
+  description: "Execute a shell command in the repository root.",
+  execute: async (
+    { command }: ExecuteCommandInput,
+    _context?: ToolExecutionContext,
+  ): Promise<ExecuteCommandOutput> => {
+    const { exec } = await import("node:child_process");
+    const { promisify } = await import("node:util");
+    const execPromise = promisify(exec);
+
+    try {
+      const { stdout, stderr } = await execPromise(command);
+      return { success: true, stdout, stderr };
+    } catch (err) {
+      const error = err as { stdout?: string; stderr?: string; message: string };
+      return {
+        success: false,
+        stdout: error.stdout ?? "",
+        stderr: error.stderr ?? error.message,
+      };
+    }
+  },
+};
+

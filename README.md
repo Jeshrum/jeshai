@@ -1,6 +1,6 @@
 # JESHAI
 
-JESHAI is a robust, local-first AI development workspace and orchestrator powered by Ollama. It enables powerful multi-agent AI workflows for seamless code generation and autonomous file execution on your local machine, prioritizing privacy, offline accessibility, and low resource utilization.
+JESHAI is a robust, local-first **AI Company Orchestrator** powered by Ollama. It enables powerful multi-agent workflows that simulate a full-stack tech company—from Product Management and Engineering to Marketing and Finance—all running autonomously on your local machine.
 
 ---
 
@@ -66,6 +66,7 @@ npm start -- "Create a simple python snake game"
 - `workflows/` — JSON sequences that define how agents collaborate.
 - `local-ai.config.json` — Core settings for models, memory limits, and logic.
 - `src/` — The high-performance TypeScript engine powering the orchestrator.
+- `docs/company-structure.md` — Detailed **Company Organogram** and Agent/Skill Audit.
 
 ## 🛠️ Built With
 - [Vercel AI SDK](https://sdk.vercel.ai/docs)

@@ -38,7 +38,18 @@ JESHAI is a **local-first** alternative to centralized AI orchestration layers l
 JESHAI agents are more than just "bare prompts." They are equipped with **Functional Tools**:
 - **File System Control**: Read/Write files across the entire workspace.
 - **Automated Hand-offs**: Context flows sequentially from PM to DevOps.
-- **Terminal Execution** (Roadmap): Validating code by running it locally.
+- **Terminal Execution**: Validating code by running it locally (Tests & Builds).
+- **Project Onboarding**: Auditing and finishing existing legacy projects automatically.
+- **Marketing Automation**: Autonomous content creation and API-driven social media management.
+
+---
+
+## 🏗️ Technical Mastery: The "Import & Complete" Engine
+JESHAI isn't just for new ideas. It is designed to take over **unfinished projects**:
+1.  **Investigative Audit**: Agents use `readFile` and `executeCommand` to map bugs.
+2.  **Refactoring**: Technical agents stabilize the base.
+3.  **Expansion**: PM and Architect implement the missing vision.
+4.  **Launch**: Business agents take it to market.
 
 ---
 

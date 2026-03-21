@@ -1,77 +1,91 @@
-# JESHAI
+# JESHAI: The World's First Local-First AI Company Orchestrator
 
-JESHAI is a robust, local-first **AI Company Orchestrator** powered by Ollama. It enables powerful multi-agent workflows that simulate a full-stack tech company—from Product Management and Engineering to Marketing and Finance—all running autonomously on your local machine.
+**Local Intelligence. Global Capability. Total Data Sovereignty.**
 
----
-
-## 💡 Use Cases
-
-JESHAI is designed to bridge the gap between simple AI chat and fully autonomous local development. Here are three primary ways to use it:
-
-### 1. The "Local Dev-Loop" (Pro Developer)
-**Automate the repetitive cycle of writing, testing, and fixing code.**
-*   **The Flow**: You give a high-level goal (e.g., "Build a React weather component").
-*   **The Action**: JESHAI’s **Architect** plans the structure, the **Frontend Engineer** writes the code, and the **QA Engineer** runs tests. If a test fails, the agents automatically refine the code until it passes.
-*   **Value**: Massive time savings on boilerplate and iterative debugging.
-
-### 2. Private Data Processing (Data Sensitive)
-**Process confidential files without them ever leaving your hardware.**
-*   **The Flow**: Point JESHAI to a local directory of sensitive logs or spreadsheets.
-*   **The Action**: Use local models (like `qwen2.5`) to analyze, clean, or summarize data. All processing happens in RAM on your machine.
-*   **Value**: 100% data privacy and compliance; no third-party API exposure.
-
-### 3. Rapid Prototyping (Non-Technical / Product)
-**Go from an idea to a working script in minutes without manual setup.**
-*   **The Flow**: Describe a small tool or automation (e.g., "A Python script to bulk-rename my photos").
-*   **The Action**: JESHAI generates the script and creates a `docs/` guide on how to run it.
-*   **Value**: Fast realization of ideas for solo-founders and non-coders.
+JESHAI is a professional-grade, multi-agent AI workspace designed to operate as a self-contained, full-stack technology company. Powered by **Ollama**, JESHAI orchestrates a team of 12 specialized AI agents—spanning Engineering, Product, Marketing, Finance, and Legal—all running autonomously on local hardware.
 
 ---
 
-## ✨ Features
+## 💎 The JESHAI Value Proposition
 
-- **Local-First AI Execution**: Powered by Ollama for maximum privacy.
-- **Multi-Agent Architecture**: Uses specialized roles (Architect, QA, Dev) to solve complex problems.
-- **Sequential Orchestration**: Intelligent handoffs keep RAM and battery usage low on laptops.
-- **Autonomous Editing**: Built-in safety guards allow agents to edit and create files directly.
+In an era of cloud-dependency and data leakage, JESHAI provides a secure, private, and high-performance alternative for building and launching technology products.
+
+### 🛡️ 100% Data Sovereignty
+Commercial secrets, proprietary code, and financial strategies never leave your local machine. JESHAI uses local LLMs to ensure your company's intellectual property is yours alone.
+
+### ⚡ Professional Autonomy
+JESHAI agents aren't just chat bots—they are **Functional Specialists**. With built-in skills for **Terminal Execution**, **File System Modification**, and **Sequential Context Handoffs**, the system can audit code, fix bugs, and draft marketing material without human intervention.
 
 ---
 
-## 🚀 Getting Started (Simplified)
+## 🏢 The Team (12 Specialized Roles)
 
-### 1. Prerequisites (Setup Your Machine)
-*   **Ollama**: [Download here](https://ollama.com). Open the app and make sure it's running.
-*   **Node.js**: [Download here](https://nodejs.org). This runs the JESHAI engine.
+JESHAI simulates the department structure of a modern tech firm:
 
-### 2. Installation
-Open your Terminal and run:
-```bash
-git clone https://github.com/Jeshrum/jeshai.git
-cd jeshai
-npm install
+```mermaid
+graph TD
+    %% Management
+    CEO["Orchestrator (src/index.ts)"]
+    CM["Coordinator (src/agents/coordinator.ts)"]
+    
+    %% Production
+    ENG["Engineering Team (FE, BE, DevOps)"]
+    PRODUCT["Product & Design (PM, Architect, Docs)"]
+    GROWTH["Growth & Marketing (Hacker, Strategist)"]
+    STRAT["Business & Strategy (Finance, Legal)"]
+
+    CEO --> CM
+    CM --> PRODUCT
+    PRODUCT --> ENG
+    ENG --> GROWTH
+    GROWTH --> STRAT
+    STRAT --> CEO
 ```
 
-### 3. Usage
-Want JESHAI to do something? Just ask:
+| Department | Core Focus |
+| :--- | :--- |
+| **Engineering** | Code generation, security auditing, and automated testing. |
+| **Product** | Requirement alignment, system architecture, and user-centric logic. |
+| **Marketing** | Viral growth loops, brand voice, and video content synthesis. |
+| **Strategy** | ROI analysis, budget tracking, and legal/privacy compliance. |
+
+---
+
+## 🪜 Operational Workflows
+
+JESHAI is powered by three "Elite" workflows designed for different stages of the product lifecycle:
+
+### 1. The Dev-Loop (Innovation Mode)
+Rapidly prototype and build new features. The **Architect** plans, **Engineers** build, and **QA** verifies the code via local terminal execution.
+
+### 2. Project Onboarding (Revival Mode)
+Inherit existing legacy codebases. JESHAI audits the current state, identifies bugs, and completes the unfinished vision autonomously.
+
+### 3. Business Launch (Growth Mode)
+Transform code into a product. The **Growth Hacker** and **Content Strategist** create market-ready assets while the **Financial Analyst** verifies ROI.
+
+---
+
+## 🚀 Getting Started
+
+### Installation (Professional Setup)
+1.  **Clone the Vision**: `git clone https://github.com/Jeshrum/jeshai.git`
+2.  **Install Engine**: `npm install`
+3.  **Power On**: Ensure [Ollama](https://ollama.com) is running locally with your preferred models (e.g., `qwen2.5-coder`).
+
+### Usage
+Run the engine with a high-level objective:
 ```bash
-# Example: Create a simple snake game
-npm start -- "Create a simple python snake game"
+npm start -- "Audit and finish my existing React dashboard in ./my-project"
 ```
 
 ---
 
-## 📁 Project Structure (For Professionals)
-
-- `agents/` — Modular role definitions (markdown templates for AI logic).
-- `workflows/` — JSON sequences that define how agents collaborate.
-- `local-ai.config.json` — Core settings for models, memory limits, and logic.
-- `src/` — The high-performance TypeScript engine powering the orchestrator.
-- `docs/company-structure.md` — Detailed **Company Organogram** and Agent/Skill Audit.
-
-## 🛠️ Built With
-- [Vercel AI SDK](https://sdk.vercel.ai/docs)
-- [Ollama](https://ollama.com/)
-- [TypeScript](https://www.typescriptlang.org/)
+## 🛠️ Technical Stack
+- **AI Engine**: Ollama (Local LLM Orchestration)
+- **Orchestration**: Vercel AI SDK
+- **Language**: TypeScript (Node.js)
+- **Governance**: Custom Guarded Write Blocks & Terminal Execution Safety.
 
 ---
-*Developed for JESHAI — Local Intelligence, Globally Capable.*
+*JESHAI: Secure, Autonomous, and Invested in Your Growth.*
